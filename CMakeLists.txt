@@ -250,6 +250,8 @@ add_executable (${PROJECT_NAME} "${BUILD_TYPE}"
   src/ExperCPS.cpp
   src/ExperOPS.h
   src/ExperOPS.cpp
+  src/ExperPulse.h
+  src/ExperPulse.cpp
   src/ExpEvent.h
   src/FeatureFilters.h
   src/FeatureFilters.cpp
@@ -572,4 +574,3 @@ if (WIN32)
     ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
   )
 endif (WIN32)
-

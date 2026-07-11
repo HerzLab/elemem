@@ -13,6 +13,7 @@
 #include "EventLog.h"
 #include "ExperCPS.h"
 #include "ExperOPS.h"
+#include "ExperPulse.h"
 #include "TaskNetWorker.h"
 #include "Settings.h"
 #include "SigQuality.h"
@@ -185,6 +186,7 @@ namespace CML {
     RC::RStr config_dir;
 
     ExperOPS exper_ops;
+    ExperPulse exper_pulse;
     StimMode stim_mode = StimMode::NONE;
 
     struct CPSSetup {
@@ -205,4 +207,3 @@ namespace CML {
 
 
 #endif // HANDLER_H
-

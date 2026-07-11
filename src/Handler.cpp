@@ -50,7 +50,8 @@ namespace CML {
       task_net_worker(this),
       sig_quality(&eeg_acq),
       exper_cps(this),
-      exper_ops(this) {
+      exper_ops(this),
+      exper_pulse(this) {
     // For error management, everything that could error must go into
     // Initialize_Handler()
   }
@@ -65,6 +66,7 @@ namespace CML {
     stim_worker.SetStatusPanel(main_window->GetStatusPanel());
     exper_ops.SetStatusPanel(main_window->GetStatusPanel());
     exper_cps.SetStatusPanel(main_window->GetStatusPanel());
+    exper_pulse.SetStatusPanel(main_window->GetStatusPanel());
   }
 
   void Handler::LoadSysConfig_Handler() {
@@ -466,6 +468,22 @@ namespace CML {
       // discrete stim param sets only give fixed (non-optimized) stim parameters
       exper_cps.SetStimProfiles(min_discrete_stim_param_sets, max_discrete_stim_param_sets);
     }
+    else if (settings.exper.find("Pulse") == 0) {
+      StimProfile profile;
+      for (size_t c=0; c<settings.stimconf.size(); c++) {
+        if (settings.stimconf[c].approved &&
+            settings.stimconf[c].stimtag.empty()) {
+          profile += settings.stimconf[c].params;
+        }
+      }
+      if (profile.size() == 0) {
+        ErrorWin("ExperPulse requires at least one approved stimulation "
+                 "channel with no stim tag.");
+        return;
+      }
+
+      exper_pulse.SetStimProfile(profile);
+    }
     else {
       // Count all approved.
       StimProfile cnt_profile;
@@ -540,6 +558,9 @@ namespace CML {
       classifier->RegisterCallback("CPSClassifierDecision", exper_cps.ClassifierDecision);
       feature_filters->RegisterCallback("CPSHandleNormalization", exper_cps.HandleNormalization);
       task_stim_manager->SetCallback(exper_cps.StimDecision);
+    }
+    else if (settings.exper.find("Pulse") == 0) {
+      settings.UpdateConfFR(cps_setup.current_config);
     }
     else {
       settings.UpdateConfFR(cps_setup.current_config);
@@ -704,6 +725,9 @@ namespace CML {
               "experiment_specs", "default_experiment_duration_secs");
           exper_cps.Start(runtime_s);
       }
+    }
+    else if (settings.exper.find("Pulse") == 0) {
+      exper_pulse.Start();
     }
     else {  // Network experiment.
       SetupNetworkTask();
@@ -1143,6 +1167,7 @@ namespace CML {
     task_net_worker.Close();
     exper_ops.Stop();
     exper_cps.Stop();
+    exper_pulse.Stop();
     sig_quality.Stop();
     sigqual_running = false;
 
@@ -1150,4 +1175,3 @@ namespace CML {
     event_log.CloseFile();
   }
 }
-
