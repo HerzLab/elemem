@@ -1,0 +1,31 @@
+{
+  "electrode_config_file": "R1999J_20220324_mono_L0M0.csv",
+  "bipolar_electrode_config_file": "R1999J_20220324_bi_L0M0.csv",
+  "experiment": {
+    "stim_mode": "open",
+    "stim_channels": [
+      {
+        "electrodes": "LA1_LA2",  // Splitter mode.
+        "amplitude_range_mA": [0, 0.5],
+        "amplitude_mA": 0.5,
+        "frequency_range_Hz": [5, 200],
+        "frequency_Hz": 200,
+        "duration_range_ms": [10, 500],
+        "duration_ms": 10
+      }
+    ],
+    "experiment_specs": {
+      "pulse_intervals_ms": [5, 15, 30, 50, 100, 200],
+      "trials_per_interval": 10,
+      "interval_repeats": 6,
+      "pair_period_ms": 1000
+    },
+    "type": "Pulse"
+  },
+  "global_settings": {
+    # "micro_sampling_rate": 30000,
+    "macro_sampling_rate": 1000,
+    "binned_sampling_rate": 1000
+  },
+  "subject": "R1999J"
+}
